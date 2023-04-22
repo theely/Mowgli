@@ -123,7 +123,9 @@ __STATIC_INLINE  void drivemotor_prepareMsg(uint8_t left_speed, uint8_t right_sp
 /// @brief Initialize STM32 hardware UART to control drive motors
 /// @param  
 void DRIVEMOTOR_Init(void){
-        PAC5210RESET_GPIO_CLK_ENABLE();
+
+    PAC5210RESET_GPIO_CLK_ENABLE();
+    
     GPIO_InitTypeDef GPIO_InitStruct;
     GPIO_InitStruct.Pin = PAC5210RESET_PIN;
     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -143,25 +145,22 @@ void DRIVEMOTOR_Init(void){
     HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7 | GPIO_PIN_8 , 1);
 
     // enable port and usart clocks
-    DRIVEMOTORS_USART_GPIO_CLK_ENABLE();
-    DRIVEMOTORS_USART_USART_CLK_ENABLE();
+    DRIVEMOTORS_USART_GPIO_CLK_ENABLE();  //__HAL_RCC_GPIOD_CLK_ENABLE()
+    DRIVEMOTORS_USART_USART_CLK_ENABLE(); //__HAL_RCC_USART2_CLK_ENABLE()
+
     
     // RX
-    GPIO_InitStruct.Pin = DRIVEMOTORS_USART_RX_PIN;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_INPUT;
+    GPIO_InitStruct.Pin = DRIVEMOTORS_USART_RX_PIN|DRIVEMOTORS_USART_TX_PIN;  //GPIO_PIN_6  //USART2_ RX  //PD6  //GPIO_PIN_5 //USART2_ TX //PD5
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
-    HAL_GPIO_Init(DRIVEMOTORS_USART_RX_PORT, &GPIO_InitStruct);
-
-    // TX
-    GPIO_InitStruct.Pin = DRIVEMOTORS_USART_TX_PIN;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    // GPIO_InitStruct.Pull = GPIO_PULLUP;
-    GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
-    HAL_GPIO_Init(DRIVEMOTORS_USART_TX_PORT, &GPIO_InitStruct);
+    GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
+    HAL_GPIO_Init(DRIVEMOTORS_USART_RX_PORT, &GPIO_InitStruct); //GPIOD
 
     // Alternate Pin Set ?
-    __HAL_AFIO_REMAP_USART2_ENABLE();
+    //__HAL_AFIO_REMAP_USART2_ENABLE(); 
+    // Enable the remapping of USART2 alternate function CTS, RTS, CK, TX and RX. 
+    //Only for STM32F1 
 
     DRIVEMOTORS_USART_Handler.Instance = DRIVEMOTORS_USART_INSTANCE;// USART2
     DRIVEMOTORS_USART_Handler.Init.BaudRate = 115200;               // Baud rate
@@ -199,7 +198,8 @@ void DRIVEMOTOR_Init(void){
     hdma_usart2_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
     hdma_usart2_tx.Init.Mode = DMA_NORMAL;
     hdma_usart2_tx.Init.Priority = DMA_PRIORITY_HIGH;
-    if (HAL_DMA_Init(&hdma_usart2_tx) != HAL_OK)
+
+    if (HAL_DMA_Init(&hdma_usart2_tx) != HAL_OK) //Initializes the UART
     {
       Error_Handler();
     }
