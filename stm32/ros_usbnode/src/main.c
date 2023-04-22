@@ -19,9 +19,9 @@
 #include <stdarg.h>
 #include <math.h>
 #include <string.h>
-#include "stm32f1xx_hal.h"
-#include "stm32f1xx_hal_uart.h"
-#include "stm32f1xx_hal_adc.h"
+#include "stm32f4xx_hal.h"
+#include "stm32f4xx_hal_uart.h"
+#include "stm32f4xx_hal_adc.h"
 #include "main.h"
 // stm32 custom
 #include "board.h"

@@ -2,7 +2,7 @@
 #define _STM32_HARDWARE_H_
 
 #include "main.h"
-#include "stm32f1xx_hal.h"
+#include "stm32f4xx_hal.h"
 #include "usbd_cdc_if.h"
 #include "ringbuffer.h"
 

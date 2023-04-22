@@ -24,7 +24,7 @@
 #include "blademotor.h"
 #include "ultrasonic_sensor.h"
 #include "spiflash.h"
-#include "stm32f1xx_hal.h"
+#include "stm32f4xx_hal.h"
 #include "ringbuffer.h"
 #include "ros.h"
 #include "ros/time.h"

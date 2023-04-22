@@ -13,7 +13,7 @@
   */
 
 #include "spiflash.h"
-#include "stm32f1xx_hal.h"
+#include "stm32f4xx_hal.h"
 #include "board.h"
 #include "main.h"
 #include "soft_i2c.h"
