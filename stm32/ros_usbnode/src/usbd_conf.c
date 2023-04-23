@@ -20,7 +20,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx.h"
-#include "stm32f1xx_hal.h"
+#include "stm32f4xx_hal.h"
 #include "usbd_def.h"
 #include "usbd_core.h"
 #include "usbd_cdc.h"

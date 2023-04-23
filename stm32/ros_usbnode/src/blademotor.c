@@ -16,8 +16,8 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include "stm32f1xx_hal.h"
-#include "stm32f1xx_hal_uart.h"
+#include "stm32f4xx_hal.h"
+#include "stm32f4xx_hal_uart.h"
 
 #include "main.h"
 #include "board.h"
@@ -92,7 +92,7 @@ void BLADEMOTOR_Init(void)
     
     // RX
     GPIO_InitStruct.Pin = BLADEMOTOR_USART_RX_PIN;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_INPUT;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
     HAL_GPIO_Init(BLADEMOTOR_USART_RX_PORT, &GPIO_InitStruct);
@@ -117,7 +117,8 @@ void BLADEMOTOR_Init(void)
 
     /* UART4 DMA Init */
     /* UART4_RX Init */    
-    hdma_uart3_rx.Instance = DMA1_Channel3;
+    //hdma_uart3_rx.Instance = DMA1_Channel3;
+    hdma_uart3_rx.Instance = DMA1_Stream1; //DocID029695 Rev 2 p 17
     hdma_uart3_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
     hdma_uart3_rx.Init.PeriphInc = DMA_PINC_DISABLE;
     hdma_uart3_rx.Init.MemInc = DMA_MINC_ENABLE;
@@ -134,7 +135,8 @@ void BLADEMOTOR_Init(void)
     
     /* UART4 DMA Init */
     /* UART4_TX Init */
-    hdma_uart3_tx.Instance = DMA1_Channel2;
+    //hdma_uart3_tx.Instance = DMA1_Channel2;
+    hdma_uart3_tx.Instance =  DMA1_Stream3; //DocID029695 Rev 2 p 17
     hdma_uart3_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
     hdma_uart3_tx.Init.PeriphInc = DMA_PINC_DISABLE;
     hdma_uart3_tx.Init.MemInc = DMA_MINC_ENABLE;

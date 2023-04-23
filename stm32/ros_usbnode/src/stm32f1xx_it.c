@@ -1,7 +1,7 @@
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file    stm32f1xx_it.c
+  * @file    stm32f4xx_it.c
   * @brief   Interrupt Service Routines.
   ******************************************************************************
   * @attention
@@ -21,7 +21,7 @@
 #include "board.h"
 #include "main.h"
 #include "panel.h"
-#include "stm32f1xx_it.h"
+#include "stm32f4xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
@@ -214,10 +214,10 @@ void SysTick_Handler(void)
 }
 
 /******************************************************************************/
-/* STM32F1xx Peripheral Interrupt Handlers                                    */
+/* stm32f4xx Peripheral Interrupt Handlers                                    */
 /* Add here the Interrupt Handlers for the used peripherals.                  */
 /* For the available peripheral interrupt handler names,                      */
-/* please refer to the startup file (startup_stm32f1xx.s).                    */
+/* please refer to the startup file (startup_stm32f4xx.s).                    */
 /******************************************************************************/
 
 /**

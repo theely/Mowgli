@@ -15,8 +15,8 @@
 *******************************************************************************/
 #include <string.h>
 #include <stdlib.h>
-#include "stm32f1xx_hal.h"
-#include "stm32f1xx_hal_uart.h"
+#include "stm32f4xx_hal.h"
+#include "stm32f4xx_hal_uart.h"
 
 #include "main.h"
 #include "ros/ros_custom/cpp_main.h"
@@ -147,21 +147,22 @@ void DRIVEMOTOR_Init(void){
     DRIVEMOTORS_USART_USART_CLK_ENABLE();
     
     // RX
-    GPIO_InitStruct.Pin = DRIVEMOTORS_USART_RX_PIN;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_INPUT;
+    GPIO_InitStruct.Pin = DRIVEMOTORS_USART_RX_PIN; //GPIO_PIN_6  //USART2_ RX  //PD6  
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
     HAL_GPIO_Init(DRIVEMOTORS_USART_RX_PORT, &GPIO_InitStruct);
 
     // TX
-    GPIO_InitStruct.Pin = DRIVEMOTORS_USART_TX_PIN;
+    GPIO_InitStruct.Pin = DRIVEMOTORS_USART_TX_PIN; //GPIO_PIN_5 //USART2_ TX //PD5
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     // GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
     HAL_GPIO_Init(DRIVEMOTORS_USART_TX_PORT, &GPIO_InitStruct);
 
     // Alternate Pin Set ?
-    __HAL_AFIO_REMAP_USART2_ENABLE();
+    //__HAL_AFIO_REMAP_USART2_ENABLE();  //Only for STM32F1 
 
     DRIVEMOTORS_USART_Handler.Instance = DRIVEMOTORS_USART_INSTANCE;// USART2
     DRIVEMOTORS_USART_Handler.Init.BaudRate = 115200;               // Baud rate
@@ -175,8 +176,8 @@ void DRIVEMOTOR_Init(void){
 
     /* USART2 DMA Init */
     /* USART2_RX Init */    
-    hdma_usart2_rx.Instance = DMA1_Channel6;
-    hdma_usart2_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+    //hdma_usart2_rx.Instance = DMA1_Channel6;
+    hdma_usart2_rx.Instance = DMA1_Stream5;  //DocID029695 Rev 2 p 17
     hdma_usart2_rx.Init.PeriphInc = DMA_PINC_DISABLE;
     hdma_usart2_rx.Init.MemInc = DMA_MINC_ENABLE;
     hdma_usart2_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
@@ -191,7 +192,8 @@ void DRIVEMOTOR_Init(void){
     __HAL_LINKDMA(&DRIVEMOTORS_USART_Handler,hdmarx,hdma_usart2_rx);
 
     // USART2_TX Init */
-    hdma_usart2_tx.Instance = DMA1_Channel7;
+    //hdma_usart2_tx.Instance = DMA1_Channel7;
+    hdma_usart2_tx.Instance = DMA1_Stream6;  //DocID029695 Rev 2 p 17
     hdma_usart2_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
     hdma_usart2_tx.Init.PeriphInc = DMA_PINC_DISABLE;
     hdma_usart2_tx.Init.MemInc = DMA_MINC_ENABLE;

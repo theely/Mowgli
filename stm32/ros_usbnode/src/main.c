@@ -19,9 +19,9 @@
 #include <stdarg.h>
 #include <math.h>
 #include <string.h>
-#include "stm32f1xx_hal.h"
-#include "stm32f1xx_hal_uart.h"
-#include "stm32f1xx_hal_adc.h"
+#include "stm32f4xx_hal.h"
+#include "stm32f4xx_hal_uart.h"
+#include "stm32f4xx_hal_adc.h"
 #include "main.h"
 // stm32 custom
 #include "board.h"
@@ -301,7 +301,7 @@ void MASTER_USART_Init()
   GPIO_InitTypeDef GPIO_InitStruct;
   // RX
   GPIO_InitStruct.Pin = MASTER_USART_RX_PIN;
-  GPIO_InitStruct.Mode = GPIO_MODE_AF_INPUT;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
   HAL_GPIO_Init(MASTER_USART_RX_PORT, &GPIO_InitStruct);
@@ -325,7 +325,8 @@ void MASTER_USART_Init()
 
   /* UART4 DMA Init */
   /* UART4_RX Init */
-  hdma_uart4_rx.Instance = DMA2_Channel3;
+  //hdma_uart4_rx.Instance = DMA2_Channel3;
+  hdma_uart4_rx.Instance = DMA1_Stream2; //DocID029695 Rev 2 p 18
   hdma_uart4_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
   hdma_uart4_rx.Init.PeriphInc = DMA_PINC_DISABLE;
   hdma_uart4_rx.Init.MemInc = DMA_MINC_ENABLE;
@@ -342,7 +343,8 @@ void MASTER_USART_Init()
 
   /* UART4 DMA Init */
   /* UART4_TX Init */
-  hdma_uart4_tx.Instance = DMA2_Channel5;
+  //hdma_uart4_tx.Instance = DMA2_Channel5;
+  hdma_uart4_tx.Instance =  DMA1_Stream4;  //DocID029695 Rev 2 p 18
   hdma_uart4_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
   hdma_uart4_tx.Init.PeriphInc = DMA_PINC_DISABLE;
   hdma_uart4_tx.Init.MemInc = DMA_MINC_ENABLE;
