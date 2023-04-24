@@ -90,7 +90,7 @@ void Perimeter_vInit(void){
     /** Common config
      */
     ADC_Handle.Instance = ADC1;
-    ADC_Handle.Init.ScanConvMode = ADC_SCAN_DISABLE;
+    ADC_Handle.Init.ScanConvMode = DISABLE;
     ADC_Handle.Init.ContinuousConvMode = ENABLE;
     ADC_Handle.Init.DiscontinuousConvMode = DISABLE;
     ADC_Handle.Init.ExternalTrigConv = ADC_EXTERNALTRIG_EDGE_NONE;
@@ -102,7 +102,7 @@ void Perimeter_vInit(void){
     }
 
     sConfig.Channel = ADC_CHANNEL_6; // PA6 Perimeter sense
-    sConfig.Rank = ADC_REGULAR_RANK_1;
+    sConfig.Rank = 1;
     sConfig.SamplingTime = ADC_SAMPLETIME_71CYCLES_5; /* 28 µs with the adc clock to 9mhz */
     if (HAL_ADC_ConfigChannel(&ADC_Handle, &sConfig) != HAL_OK)
     {
