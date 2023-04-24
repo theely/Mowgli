@@ -144,16 +144,16 @@ void TIM2_Init(void)
  */
 void ADC2_Init(void)
 {
-    __HAL_RCC_ADC2_CLK_ENABLE();
+    __HAL_RCC_ADC1_CLK_ENABLE();
     __HAL_RCC_GPIOA_CLK_ENABLE();
 
     GPIO_InitTypeDef GPIO_InitStruct = {0};
     /**ADC1 GPIO Configuration
-    PA1     ------> Charge Current
-    PA2     ------> Charge Voltage
-    PA3     ------> Battery Voltage
-    PA7     ------> Charger Voltage
-    PC2     ------>  Blade NTC
+    PA1     ------> Charge Current IN_1
+    PA2     ------> Charge Voltage IN_2
+    PA3     ------> Battery Voltage IN_3
+    PA7     ------> Charger Voltage IN_7
+    PC2     ------>  Blade NTC IN_12
     */
     GPIO_InitStruct.Pin = GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_7;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
@@ -173,7 +173,7 @@ void ADC2_Init(void)
 
     /** Common config
      */
-    ADC2_Handle.Instance = ADC2;
+    ADC2_Handle.Instance = ADC1;
     ADC2_Handle.Init.ScanConvMode = DISABLE;
     ADC2_Handle.Init.ContinuousConvMode = DISABLE;
     ADC2_Handle.Init.DiscontinuousConvMode = DISABLE;
@@ -188,8 +188,8 @@ void ADC2_Init(void)
     adc2_eChannelSelection = ADC2_CHANNEL_CURRENT;
     adc2_SetChannel(adc2_eChannelSelection);
 
-    HAL_NVIC_SetPriority(ADC1_2_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ(ADC1_2_IRQn);
+    HAL_NVIC_SetPriority(ADC1_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(ADC1_IRQn);
 
     // calibrate  - important for accuracy !
     HAL_ADCEx_Calibration_Start(&ADC2_Handle);

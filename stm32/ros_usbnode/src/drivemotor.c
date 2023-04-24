@@ -125,11 +125,11 @@ __STATIC_INLINE  void drivemotor_prepareMsg(uint8_t left_speed, uint8_t right_sp
 void DRIVEMOTOR_Init(void){
         PAC5210RESET_GPIO_CLK_ENABLE();
     GPIO_InitTypeDef GPIO_InitStruct;
-    GPIO_InitStruct.Pin = PAC5210RESET_PIN;
+    GPIO_InitStruct.Pin = PAC5210RESET_PIN;  //GPIO_PIN_15
     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
-    HAL_GPIO_Init(PAC5210RESET_GPIO_PORT, &GPIO_InitStruct);
+    HAL_GPIO_Init(PAC5210RESET_GPIO_PORT, &GPIO_InitStruct); //GPIOE
     HAL_GPIO_WritePin(PAC5210RESET_GPIO_PORT, PAC5210RESET_PIN, 0);     // take Drive Motor PAC out of reset if LOW
 
 
@@ -146,20 +146,17 @@ void DRIVEMOTOR_Init(void){
     DRIVEMOTORS_USART_GPIO_CLK_ENABLE();
     DRIVEMOTORS_USART_USART_CLK_ENABLE();
     
-    // RX
-    GPIO_InitStruct.Pin = DRIVEMOTORS_USART_RX_PIN; //GPIO_PIN_6  //USART2_ RX  //PD6  
+     // RX & TX USART2
+    //GPIO Port: D 
+    //Pins: D6 RX  D5 TX
+    //Alternate Fuction: AF7
+    GPIO_InitStruct.Pin = DRIVEMOTORS_USART_RX_PIN|DRIVEMOTORS_USART_TX_PIN;  
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
+    HAL_GPIO_Init(DRIVEMOTORS_USART_RX_PORT, &GPIO_InitStruct); //GPIOD
     HAL_GPIO_Init(DRIVEMOTORS_USART_RX_PORT, &GPIO_InitStruct);
-
-    // TX
-    GPIO_InitStruct.Pin = DRIVEMOTORS_USART_TX_PIN; //GPIO_PIN_5 //USART2_ TX //PD5
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    // GPIO_InitStruct.Pull = GPIO_PULLUP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
-    HAL_GPIO_Init(DRIVEMOTORS_USART_TX_PORT, &GPIO_InitStruct);
 
     // Alternate Pin Set ?
     //__HAL_AFIO_REMAP_USART2_ENABLE();  //Only for STM32F1 
@@ -176,8 +173,7 @@ void DRIVEMOTOR_Init(void){
 
     /* USART2 DMA Init */
     /* USART2_RX Init */    
-    //hdma_usart2_rx.Instance = DMA1_Channel6;
-    hdma_usart2_rx.Instance = DMA1_Stream5;  //DocID029695 Rev 2 p 17
+    hdma_usart2_rx.Instance = DMA1_Stream6;  //DocID029695 Rev 2 p 17
     hdma_usart2_rx.Init.PeriphInc = DMA_PINC_DISABLE;
     hdma_usart2_rx.Init.MemInc = DMA_MINC_ENABLE;
     hdma_usart2_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
@@ -193,7 +189,8 @@ void DRIVEMOTOR_Init(void){
 
     // USART2_TX Init */
     //hdma_usart2_tx.Instance = DMA1_Channel7;
-    hdma_usart2_tx.Instance = DMA1_Stream6;  //DocID029695 Rev 2 p 17
+    hdma_usart2_tx.Instance = DMA1_Stream7;  //DocID029695 Rev 2 p 17
+    hdma_usart2_tx.Init.Channel = DAC1_CHANNEL_7;
     hdma_usart2_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
     hdma_usart2_tx.Init.PeriphInc = DMA_PINC_DISABLE;
     hdma_usart2_tx.Init.MemInc = DMA_MINC_ENABLE;
