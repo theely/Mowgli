@@ -158,7 +158,7 @@ A6  ADC1 (DMA) - Perimeter
 // enable Drive and Blade Motor UARTS
 #define DRIVEMOTORS_USART_ENABLED 1
 #define BLADEMOTOR_USART_ENABLED 1
-#define PANEL_USART_ENABLED 1
+//#define PANEL_USART_ENABLED 1
 
 // our IMU hangs of a bigbanged I2C bus on J18
 #define SOFT_I2C_ENABLED 1
