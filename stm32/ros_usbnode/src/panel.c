@@ -85,18 +85,18 @@ void PANEL_Init(void)
     // enable port and usart clocks
     PANEL_USART_GPIO_CLK_ENABLE();
 
-    // RX
-    GPIO_InitStruct.Pin = PANEL_USART_RX_PIN;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_INPUT;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
-    HAL_GPIO_Init(PANEL_USART_RX_PORT, &GPIO_InitStruct);
 
-    // TX
-    GPIO_InitStruct.Pin = PANEL_USART_TX_PIN;
+    /**USART1 GPIO Configuration
+    PA9     ------> USART1_TX
+    PA10     ------> USART1_RX
+    */
+    GPIO_InitStruct.Pin = GPIO_PIN_9|GPIO_PIN_10;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
-    HAL_GPIO_Init(PANEL_USART_TX_PORT, &GPIO_InitStruct);
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
 
     PANEL_USART_USART_CLK_ENABLE();
 
@@ -113,7 +113,8 @@ void PANEL_Init(void)
     
     /* UART1 DMA Init */
     /* UART1_RX Init */    
-    hdma_uart1_rx.Instance = DMA1_Channel5;
+    hdma_uart1_rx.Instance = DMA2_Stream2;
+    hdma_uart1_rx.Init.Channel = DMA_CHANNEL_4;
     hdma_uart1_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
     hdma_uart1_rx.Init.PeriphInc = DMA_PINC_DISABLE;
     hdma_uart1_rx.Init.MemInc = DMA_MINC_ENABLE;
@@ -121,6 +122,7 @@ void PANEL_Init(void)
     hdma_uart1_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
     hdma_uart1_rx.Init.Mode = DMA_NORMAL;
     hdma_uart1_rx.Init.Priority = DMA_PRIORITY_LOW;
+    hdma_uart1_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
     if (HAL_DMA_Init(&hdma_uart1_rx) != HAL_OK)
     {
       Error_Handler();
@@ -130,7 +132,8 @@ void PANEL_Init(void)
     
     /* UART4 DMA Init */
     /* UART4_TX Init */
-    hdma_uart1_tx.Instance = DMA1_Channel4;
+    hdma_uart1_tx.Instance = DMA2_Stream7;
+    hdma_uart1_tx.Init.Channel = DMA_CHANNEL_4;
     hdma_uart1_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
     hdma_uart1_tx.Init.PeriphInc = DMA_PINC_DISABLE;
     hdma_uart1_tx.Init.MemInc = DMA_MINC_ENABLE;
@@ -138,6 +141,7 @@ void PANEL_Init(void)
     hdma_uart1_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
     hdma_uart1_tx.Init.Mode = DMA_NORMAL;
     hdma_uart1_tx.Init.Priority = DMA_PRIORITY_LOW;
+    hdma_uart1_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
     if (HAL_DMA_Init(&hdma_uart1_tx) != HAL_OK)
     {
       Error_Handler();
@@ -339,7 +343,7 @@ void PANEL_Send_Message(uint8_t *data, uint8_t dataLength, uint16_t command)
 #endif
 }
 
-
+#ifdef PANEL_USART_ENABLED
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 {
 	if (huart->Instance == PANEL_USART_INSTANCE)
@@ -362,3 +366,4 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 
 	}
 }
+#endif
