@@ -18,6 +18,56 @@ extern "C"
  * BOARD SELECTION
  * the specific board setting are set a the end of this file
  ********************************************************************************/
+
+
+
+/********************************************************************************
+* PIN MAPPING
+
+B2  GPIO LED
+C5  GPIO 24V Enable
+E14 GPIO Blade Motor nRESET - (HIGH for no RESET)
+E15 GPIO Drive Motors - HC366 OE Pins (LOW to enable)
+E8  GPIO Charge Control Pins - HighSide/LowSide MosFET
+E9  GPIO Charge Control Pins - HighSide/LowSide MosFET
+C0  GPIO Stop button - yellow (HIGH when pressed)
+C8  GPIO Stop button - white (HIGH when pressed)
+A8  GPIO Mechanical tilt - (HIGH when set)
+B3  SPI3 Flash CLK
+B4  SPI3 Flash MISO
+B5  SPI3 Flash MISI
+A15 xxx  Flash nCS  //TODO: add peripheral type
+D0  GPIO Wheel lift blue
+D1  GPIO Wheel lift red
+C7  GPIO Play button - (LOW when pressed)
+B13 GPIO Home button - (LOW when pressed)
+E2  GPIO Rain Sensor - (LOW when active)
+D2  GPIO STOP HALL Sensor - (HIGH when set)
+D3  GPIO STOP HALL Sensor - (HIGH when set)
+[not used] A10 UART1 RX - Master UART Port J16
+[not used] A9  UART1 TX - Master UART Port J16
+C11 UART4 RX (DMA) - Master UART Red Port J18 (DMA)
+C10 UART4 TX (DMA) - Master UART Red Port J18
+D6  UART2 RX (DMA) - Driver motros 
+D5  UART2 TX (DMA) - Driver motros 
+B11 UART6 RX (DMA) - Blade motor
+B10 UART6 TX (DMA) - Blade motor
+A10 UART1 RX (DMA) - Panle UART Port J16
+A9  UART1 TX (DMA) - Panle UART Port J16
+[not used] B3  GPIO SOFT I2C
+[not used] B4  GPIO SOFT I2C
+A1  ADC1 - Charge Current
+A2  ADC1 - Charge Voltage
+A3  ADC1 - Battery Voltage
+A7  ADC1 - Charger Voltage
+C2  ADC1 - Blade NTC
+A6  ADC1 (DMA) - Perimeter
+
+/********************************************************************************
+
+
+
+
  #define BOARD_YARDFORCE500 1
 //#define BOARD_LUV1000RI 1
 
