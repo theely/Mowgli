@@ -96,30 +96,35 @@ void Perimeter_vInit(void){
     ADC_Handle.Init.ExternalTrigConv = ADC_EXTERNALTRIG_EDGE_NONE;
     ADC_Handle.Init.DataAlign = ADC_DATAALIGN_RIGHT;
     ADC_Handle.Init.NbrOfConversion = 1;
+
+    
     if (HAL_ADC_Init(&ADC_Handle) != HAL_OK)
     {
         Error_Handler();
     }
 
-    sConfig.Channel = ADC_CHANNEL_6; // PA6 Perimeter sense
-    sConfig.Rank = 1;
-    sConfig.SamplingTime = ADC_SAMPLETIME_71CYCLES_5; /* 28 µs with the adc clock to 9mhz */
+   sConfig.Channel = ADC_CHANNEL_2;
+   sConfig.Rank = 1;
+   sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
     if (HAL_ADC_ConfigChannel(&ADC_Handle, &sConfig) != HAL_OK)
     {
        Error_Handler();
     }
 
-    /* ADC DMA Init */
-    /* ADC Init */
 
-    hdma_adc.Instance = DMA1_Channel1;
+    /* ADC1 DMA Init */
+    /* ADC1 Init */
+    hdma_adc.Instance = DMA2_Stream0;
+    hdma_adc.Init.Channel = DMA_CHANNEL_0;
     hdma_adc.Init.Direction = DMA_PERIPH_TO_MEMORY;
     hdma_adc.Init.PeriphInc = DMA_PINC_DISABLE;
     hdma_adc.Init.MemInc = DMA_MINC_ENABLE;
     hdma_adc.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
     hdma_adc.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
     hdma_adc.Init.Mode = DMA_NORMAL;
-    hdma_adc.Init.Priority = DMA_PRIORITY_HIGH;
+    hdma_adc.Init.Priority = DMA_PRIORITY_LOW; 
+    hdma_adc.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+
     if (HAL_DMA_Init(&hdma_adc) != HAL_OK)
     {
       Error_Handler();
@@ -128,7 +133,7 @@ void Perimeter_vInit(void){
    __HAL_LINKDMA(&ADC_Handle,DMA_Handle,hdma_adc);
 
   // calibrate  - important for accuracy !
-  HAL_ADCEx_Calibration_Start(&ADC_Handle); 
+  //HAL_ADCEx_Calibration_Start(&ADC_Handle);  //TODO: check new fuction mae
 
   perimeter_bFlagIT = false;
   idxCoil = COIL_MAX;
