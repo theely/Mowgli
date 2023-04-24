@@ -57,6 +57,8 @@ void  __attribute__ ((optimize(0))) TIMER__Wait_us (uint32_t nCount)
 void SW_I2C_Init(void)
 {
     /* PB3, PB4 are used by the JTAG - we need to disable it, as we use SWD anyhow we dont need it */
+    
+    /* TODO; find new ways to disable JTAG
     RCC->APB2ENR |= RCC_APB2ENR_AFIOEN; // Enable A.F. clock
 
     if( (SW_I2C1_SDA_PIN == GPIO_PIN_3) || (SW_I2C1_SCL_PIN == GPIO_PIN_3)){
@@ -66,6 +68,7 @@ void SW_I2C_Init(void)
     {
         AFIO->MAPR |= AFIO_MAPR_SWJ_CFG_NOJNTRST; // JTAG is disabled
     }
+    */
     
     SOFT_I2C_GPIO_CLK_ENABLE();
 
