@@ -89,35 +89,37 @@ void BLADEMOTOR_Init(void)
     // enable port and usart clocks
     BLADEMOTOR_USART_GPIO_CLK_ENABLE();
     BLADEMOTOR_USART_USART_CLK_ENABLE();
+
     
-    // RX
-    GPIO_InitStruct.Pin = BLADEMOTOR_USART_RX_PIN;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_INPUT;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
-    HAL_GPIO_Init(BLADEMOTOR_USART_RX_PORT, &GPIO_InitStruct);
-
-    // TX
-    GPIO_InitStruct.Pin = BLADEMOTOR_USART_TX_PIN;
+    
+    /**USART6 GPIO Configuration
+    PC6     ------> USART6_TX  OLD PIN WAS PB11
+    PC7     ------> USART6_RX  OLD PIN WAS PB10
+    */
+    GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_7;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
-    HAL_GPIO_Init(BLADEMOTOR_USART_TX_PORT, &GPIO_InitStruct);    
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF8_USART6;
+    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+    
 
-    BLADEMOTOR_USART_Handler.Instance = BLADEMOTOR_USART_INSTANCE;// USART3
+    BLADEMOTOR_USART_Handler.Instance = USART6;// USART3
     BLADEMOTOR_USART_Handler.Init.BaudRate = 115200;               // Baud rate
     BLADEMOTOR_USART_Handler.Init.WordLength = UART_WORDLENGTH_8B; // The word is  8  Bit format
     BLADEMOTOR_USART_Handler.Init.StopBits = USART_STOPBITS_1;     // A stop bit
     BLADEMOTOR_USART_Handler.Init.Parity = UART_PARITY_NONE;       // No parity bit
     BLADEMOTOR_USART_Handler.Init.HwFlowCtl = UART_HWCONTROL_NONE; // No hardware flow control
     BLADEMOTOR_USART_Handler.Init.Mode = USART_MODE_TX_RX;         // Transceiver mode
-    
+    BLADEMOTOR_USART_Handler.Init.OverSampling = UART_OVERSAMPLING_16;        
     HAL_UART_Init(&BLADEMOTOR_USART_Handler); 
 
     DB_TRACE(" * Blade Motor UART initialized\r\n");
 
     /* UART4 DMA Init */
     /* UART4_RX Init */    
-    hdma_uart3_rx.Instance = DMA1_Channel3;
+    hdma_uart3_rx.Instance = DMA2_Stream1;
+    hdma_uart3_rx.Init.Channel = DMA_CHANNEL_5;
     hdma_uart3_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
     hdma_uart3_rx.Init.PeriphInc = DMA_PINC_DISABLE;
     hdma_uart3_rx.Init.MemInc = DMA_MINC_ENABLE;
@@ -125,16 +127,20 @@ void BLADEMOTOR_Init(void)
     hdma_uart3_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
     hdma_uart3_rx.Init.Mode = DMA_NORMAL;
     hdma_uart3_rx.Init.Priority = DMA_PRIORITY_LOW;
+    hdma_uart3_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+
     if (HAL_DMA_Init(&hdma_uart3_rx) != HAL_OK)
     {
       Error_Handler();
     }
 
     __HAL_LINKDMA(&BLADEMOTOR_USART_Handler,hdmarx,hdma_uart3_rx);
+
     
     /* UART4 DMA Init */
     /* UART4_TX Init */
-    hdma_uart3_tx.Instance = DMA1_Channel2;
+    hdma_uart3_tx.Instance = DMA2_Stream6;
+    hdma_uart3_tx.Init.Channel = DMA_CHANNEL_5;
     hdma_uart3_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
     hdma_uart3_tx.Init.PeriphInc = DMA_PINC_DISABLE;
     hdma_uart3_tx.Init.MemInc = DMA_MINC_ENABLE;
@@ -142,6 +148,7 @@ void BLADEMOTOR_Init(void)
     hdma_uart3_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
     hdma_uart3_tx.Init.Mode = DMA_NORMAL;
     hdma_uart3_tx.Init.Priority = DMA_PRIORITY_HIGH;
+    hdma_uart3_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
     if (HAL_DMA_Init(&hdma_uart3_tx) != HAL_OK)
     {
       Error_Handler();
@@ -150,8 +157,8 @@ void BLADEMOTOR_Init(void)
     __HAL_LINKDMA(&BLADEMOTOR_USART_Handler,hdmatx,hdma_uart3_tx);
     
     // enable IRQ
-    HAL_NVIC_SetPriority(USART3_IRQn, 0, 0);
-	HAL_NVIC_EnableIRQ(USART3_IRQn);     
+    HAL_NVIC_SetPriority(USART6_IRQn, 0, 0);
+	HAL_NVIC_EnableIRQ(USART6_IRQn);     
     __HAL_UART_ENABLE_IT(&BLADEMOTOR_USART_Handler, UART_IT_TC);
 
     blademotor_eState = BLADEMOTOR_INIT_1;    
