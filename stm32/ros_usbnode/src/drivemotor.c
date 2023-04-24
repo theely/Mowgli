@@ -148,6 +148,8 @@ void DRIVEMOTOR_Init(void){
     DRIVEMOTORS_USART_GPIO_CLK_ENABLE();  //__HAL_RCC_GPIOD_CLK_ENABLE()
     DRIVEMOTORS_USART_USART_CLK_ENABLE(); //__HAL_RCC_USART2_CLK_ENABLE()
 
+
+
     
     // RX & TX USART2
     //GPIO Port: D 
@@ -175,9 +177,11 @@ void DRIVEMOTOR_Init(void){
     
     HAL_UART_Init(&DRIVEMOTORS_USART_Handler); 
 
+
     /* USART2 DMA Init */
     /* USART2_RX Init */    
-    hdma_usart2_rx.Instance = DMA1_Stream6;
+    hdma_usart2_rx.Instance = DMA1_Stream5;
+    hdma_usart2_rx.Init.Channel = DMA_CHANNEL_4;
     hdma_usart2_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
     hdma_usart2_rx.Init.PeriphInc = DMA_PINC_DISABLE;
     hdma_usart2_rx.Init.MemInc = DMA_MINC_ENABLE;
@@ -185,6 +189,7 @@ void DRIVEMOTOR_Init(void){
     hdma_usart2_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
     hdma_usart2_rx.Init.Mode = DMA_NORMAL;
     hdma_usart2_rx.Init.Priority = DMA_PRIORITY_LOW;
+    hdma_usart2_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
     if (HAL_DMA_Init(&hdma_usart2_rx) != HAL_OK)
     {
       Error_Handler();
@@ -193,8 +198,8 @@ void DRIVEMOTOR_Init(void){
     __HAL_LINKDMA(&DRIVEMOTORS_USART_Handler,hdmarx,hdma_usart2_rx);
 
     // USART2_TX Init */
-    hdma_usart2_tx.Instance = DMA1_Stream7;
-     hdma_usart2_tx.Init.Channel = DAC1_CHANNEL_7;
+    hdma_usart2_tx.Instance = DMA1_Stream6;
+    hdma_usart2_tx.Init.Channel = DMA_CHANNEL_4;
     hdma_usart2_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
     hdma_usart2_tx.Init.PeriphInc = DMA_PINC_DISABLE;
     hdma_usart2_tx.Init.MemInc = DMA_MINC_ENABLE;
@@ -202,6 +207,7 @@ void DRIVEMOTOR_Init(void){
     hdma_usart2_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
     hdma_usart2_tx.Init.Mode = DMA_NORMAL;
     hdma_usart2_tx.Init.Priority = DMA_PRIORITY_HIGH;
+    hdma_usart2_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
 
     if (HAL_DMA_Init(&hdma_usart2_tx) != HAL_OK) //Initializes the UART
     {
