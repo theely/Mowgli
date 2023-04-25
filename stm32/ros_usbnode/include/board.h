@@ -66,7 +66,8 @@ A3  ADC1 - Battery Voltage
 A7  ADC1 - Charger Voltage
 C2  ADC1 - Blade NTC
 A6  ADC1 (DMA) - Perimeter
-
+H0  RCC HSE - External crystal 8Mhz
+H1  RCC HSE - External crystal 8Mhz
 /********************************************************************************
 
 
@@ -253,14 +254,14 @@ A6  ADC1 (DMA) - Perimeter
 #endif
 #ifdef MASTER_J18
 /* UART4 (J18 Pin 7 (TX) Pin 8 (RX)) */
-#define MASTER_USART_INSTANCE UART4
+#define MASTER_USART_INSTANCE USART1
 #define MASTER_USART_RX_PIN GPIO_PIN_11
 #define MASTER_USART_RX_PORT GPIOC
 #define MASTER_USART_TX_PIN GPIO_PIN_10
 #define MASTER_USART_TX_PORT GPIOC
 #define MASTER_USART_GPIO_CLK_ENABLE() __HAL_RCC_GPIOC_CLK_ENABLE()
 #define MASTER_USART_USART_CLK_ENABLE() __HAL_RCC_UART4_CLK_ENABLE()
-#define MASTER_USART_IRQ UART4_IRQn
+#define MASTER_USART_IRQ USART1_IRQn
 #endif
 
 #ifdef DRIVEMOTORS_USART_ENABLED
